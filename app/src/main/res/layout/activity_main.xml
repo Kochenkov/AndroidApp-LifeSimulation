@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.MainActivity">
+    tools:context=".presentation.activity.MainActivity">
 
-    <com.vkochenkov.lifesimulation.presentation.FieldView
+    <com.vkochenkov.lifesimulation.presentation.view.FieldView
         android:id="@+id/field_view"
         android:layout_width="0dp"
         android:layout_height="0dp"

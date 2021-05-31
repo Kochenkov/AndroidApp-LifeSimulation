@@ -1,4 +1,4 @@
-package com.vkochenkov.lifesimulation.presentation
+package com.vkochenkov.lifesimulation.presentation.view
 
 import android.content.Context
 import android.graphics.Canvas
@@ -6,16 +6,15 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
-import kotlin.math.log
+import com.vkochenkov.lifesimulation.model.Cell
 
 
 class FieldView : View {
 
     var viewSize: Int = 0
 
-    var cellsArray: Array<Array<Boolean>>? = null
+    var toDrawArray: Array<Array<Cell?>>? = null
 
     constructor(ctx: Context) : super(ctx) {
     }
@@ -24,6 +23,7 @@ class FieldView : View {
     }
 
     companion object {
+        //todo заменить на ресурсы
         val BACKGROUND_COLOR = Color.BLUE
         val CELLS_COLOR = Color.RED
     }
@@ -32,49 +32,40 @@ class FieldView : View {
         super.onDraw(canvas)
         viewSize = this.measuredWidth
         drawBackground(canvas)
-        if (cellsArray!=null) {
-            drawCells(canvas, cellsArray!!)
+        if (toDrawArray != null) {
+            drawCells(canvas, toDrawArray!!)
         }
-
     }
 
     private fun drawBackground(canvas: Canvas) {
         val paint = Paint()
-        paint.color = BACKGROUND_COLOR
+        paint.color =
+            BACKGROUND_COLOR
         val rect = Rect(0, 0, viewSize, viewSize)
         canvas.drawRect(rect, paint)
     }
 
-    private fun drawCells(canvas: Canvas, cellsArray: Array<Array<Boolean>>) {
+    private fun drawCells(canvas: Canvas, cellsArray: Array<Array<Cell?>>) {
         val paint = Paint()
-        paint.color = CELLS_COLOR
+        paint.color =
+            CELLS_COLOR
 
         val cellsAmount = cellsArray[0].size
-        Log.d("cellsAmount", cellsAmount.toString())
-        val rectSize = viewSize/cellsAmount
-        Log.d("rectSize", rectSize.toString())
-        Log.d("viewSize", viewSize.toString())
+        val rectSize = viewSize / cellsAmount
 
         var line = 0
         var column = 0
 
         for (array in cellsArray) {
-           // Log.d("line", line.toString())
             for (elem in array) {
-                val rect = Rect(column, line, rectSize+column, rectSize+line)
-                column+=rectSize
-                //Log.d("column", column.toString())
-
-                if (elem) {
+                val rect = Rect(column, line, rectSize + column, rectSize + line)
+                column += rectSize
+                if (elem!!.isAlive) {
                     canvas.drawRect(rect, paint)
                 }
             }
-            line+=rectSize
-
+            line += rectSize
             column = 0
         }
-
-
-
     }
 }
