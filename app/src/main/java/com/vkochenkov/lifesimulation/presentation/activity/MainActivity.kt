@@ -8,11 +8,15 @@ import com.vkochenkov.lifesimulation.model.CellsField
 import com.vkochenkov.lifesimulation.presentation.view.FieldView
 import io.reactivex.Observable
 import io.reactivex.Observer
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
+    
+    //todo написать презентер
 
     lateinit var fieldView: FieldView
     lateinit var restartBtn: Button
@@ -26,6 +30,7 @@ class MainActivity : AppCompatActivity() {
     //todo вынести
     val size = 51
     val randomAliveFactor = 0.5
+    val renderInterval = 250L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,14 +42,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startObserve() {
-        val observable = Observable.interval(250, TimeUnit.MILLISECONDS)
-        observable.subscribe(observer)
+        val observable = Observable.interval(renderInterval, TimeUnit.MILLISECONDS)
+        observable.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(observer)
     }
 
     private fun setOnClickListeners() {
+
         restartBtn.setOnClickListener {
-            val observable = Observable.interval(250, TimeUnit.MILLISECONDS)
-            observable.subscribe(observer)
+            disposable.clear()
+            val observable = Observable.interval(renderInterval, TimeUnit.MILLISECONDS)
+            observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(observer)
         }
 
         stopBtn.setOnClickListener {
@@ -72,6 +83,7 @@ class MainActivity : AppCompatActivity() {
         disposable = CompositeDisposable()
         cellsField = CellsField(size, randomAliveFactor)
 
+        //todo вынести в ф-цию и передавать в нее параметр генерации нового массива, либо использования старого для продолжения
         observer = object : Observer<Long> {
             override fun onComplete() {}
 
