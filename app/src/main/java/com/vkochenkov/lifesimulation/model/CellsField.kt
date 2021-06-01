@@ -1,10 +1,10 @@
 package com.vkochenkov.lifesimulation.model
 
-import kotlin.math.ceil
-
 class CellsField constructor(val size: Int) {
 
     var randomAliveFactor: Double = 0.5
+
+    val cellsArray: Array<Array<Cell?>> = Array(size) { arrayOfNulls<Cell>(size) }
 
     constructor(size:Int, randomAliveFactor: Double): this(size) {
         CellsField(size)
@@ -36,14 +36,40 @@ class CellsField constructor(val size: Int) {
 //        }
 //    }
 
-    val cellsArray: Array<Array<Cell?>> = Array(size) { arrayOfNulls<Cell>(size) }
-
     init {
         for (i in 0 until size) {
             for (j in 0 until size) {
                 val cell = Cell(i, j)
                 cell.isAlive = Math.random() < randomAliveFactor
                 cellsArray[i][j] = cell
+            }
+        }
+    }
+
+    //поиск живых соседей для всех клеток
+    fun findAllNeighbors() {
+        for (array in cellsArray) {
+            for (element in array) {
+                val cell: Cell = element!!
+                cell.countAliveNeighbors(cellsArray)
+            }
+        }
+    }
+
+    //выставление флага, на основании количества живых соседей для всех клеток
+    fun determineDeadOrAlive() {
+        for (array in cellsArray) {
+            for (element in array) {
+                val cell: Cell = element!!
+                if (cell.isAlive) {
+                    if (cell.aliveNeighbors < 2 || cell.aliveNeighbors > 3) {
+                        cell.isAlive = false
+                    }
+                } else {
+                    if (cell.aliveNeighbors == 3) {
+                        cell.isAlive = true
+                    }
+                }
             }
         }
     }

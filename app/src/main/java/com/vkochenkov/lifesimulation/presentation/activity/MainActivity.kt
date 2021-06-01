@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         fieldView = findViewById(R.id.field_view)
 
-        fieldView.toDrawArray = cellsField.cellsArray
+        fieldView.cellsField = cellsField
 
         mainThread().start()
 
@@ -37,31 +37,12 @@ class MainActivity : AppCompatActivity() {
                 //todo вынести в отдельные методы?
 
                 //поиск соседей
-                for (i in 0 until cellsField.size) {
-                    for (j in 0 until cellsField.size) {
-                        val cell: Cell = cellsField.cellsArray[i][j]!!
-                        cell.countAliveNeighbors(cellsField.cellsArray)
-                    }
-                }
+                cellsField.findAllNeighbors()
+                cellsField.determineDeadOrAlive()
 
-                //жив или мертв
-                for (i in 0 until cellsField.size) {
-                    for (j in 0 until cellsField.size) {
-                        val cell: Cell = cellsField.cellsArray[i][j]!!
-                        if (cell.isAlive) {
-                            if (cell.aliveNeighbors < 2 || cell.aliveNeighbors > 3) {
-                                cell.isAlive = false
-                            }
-                        } else {
-                            if (cell.aliveNeighbors == 3) {
-                                cell.isAlive = true
-                            }
-                        }
-                    }
-                }
-                fieldView.toDrawArray = cellsField.cellsArray
+                fieldView.cellsField = cellsField
                 fieldView.invalidate()
-                sleep(500)
+                sleep(250)
             }
         }
     }

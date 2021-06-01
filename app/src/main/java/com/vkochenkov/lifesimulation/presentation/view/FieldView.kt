@@ -9,13 +9,14 @@ import android.util.TypedValue
 import android.view.View
 import com.vkochenkov.lifesimulation.R
 import com.vkochenkov.lifesimulation.model.Cell
+import com.vkochenkov.lifesimulation.model.CellsField
 
 
 class FieldView : View {
 
     var viewSize: Int = 0
 
-    var toDrawArray: Array<Array<Cell?>>? = null
+    var cellsField: CellsField? = null
 
     val BACKGROUND_COLOR: Int
     val CELLS_COLOR: Int
@@ -39,8 +40,8 @@ class FieldView : View {
         super.onDraw(canvas)
         viewSize = this.measuredWidth
         drawBackground(canvas)
-        if (toDrawArray != null) {
-            drawCells(canvas, toDrawArray!!)
+        if (cellsField != null) {
+            drawCells(canvas, cellsField!!.cellsArray)
         }
     }
 
