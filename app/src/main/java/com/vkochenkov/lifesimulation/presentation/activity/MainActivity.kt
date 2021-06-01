@@ -6,6 +6,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.vkochenkov.lifesimulation.R
 import com.vkochenkov.lifesimulation.model.CellsField
 import com.vkochenkov.lifesimulation.presentation.view.FieldView
+import io.reactivex.Observable
+import io.reactivex.Observer
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -13,73 +18,77 @@ class MainActivity : AppCompatActivity() {
     lateinit var restartBtn: Button
     lateinit var stopBtn: Button
 
-    var gameThreadIsWorking = false
-    val gameThreadIsStoppedKey = "gameThreadIsWorking"
-
-    //todo вынести в конфиг/базу
-    val size = 51
-    val randomAliveFactor = 0.5
+    lateinit var observer: Observer<Long>
+    lateinit var disposable: CompositeDisposable
 
     lateinit var cellsField: CellsField
-    val cellsFieldKey = "cellsField"
 
+    //todo вынести
+    val size = 51
+    val randomAliveFactor = 0.5
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         initFields()
-        cellsField = CellsField(size, randomAliveFactor)
-        if (!gameThreadIsWorking) {
-            startNewGameThread()
-        }
+        setOnClickListeners()
+        startObserve()
+    }
 
+    private fun startObserve() {
+        val observable = Observable.interval(250, TimeUnit.MILLISECONDS)
+        observable.subscribe(observer)
+    }
+
+    private fun setOnClickListeners() {
         restartBtn.setOnClickListener {
-            gameThreadIsWorking = false
-            startNewGameThread()
+            val observable = Observable.interval(250, TimeUnit.MILLISECONDS)
+            observable.subscribe(observer)
         }
 
         stopBtn.setOnClickListener {
-            gameThreadIsWorking = false
+            disposable.clear()
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putBoolean(gameThreadIsStoppedKey, gameThreadIsWorking)
-        outState.putSerializable(cellsFieldKey, cellsField)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        gameThreadIsWorking = savedInstanceState.getBoolean(gameThreadIsStoppedKey)
-        cellsField = savedInstanceState.getSerializable(cellsFieldKey) as CellsField
-    }
-
-    private fun startNewGameThread() {
-        fieldView.cellsField = cellsField
-        mainThread().start()
-    }
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        super.onSaveInstanceState(outState)
+//        outState.putBoolean(gameThreadIsStoppedKey, gameThreadIsWorking)
+//        outState.putSerializable(cellsFieldKey, cellsField)
+//    }
+//
+//    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+//        super.onRestoreInstanceState(savedInstanceState)
+//        gameThreadIsWorking = savedInstanceState.getBoolean(gameThreadIsStoppedKey)
+//        cellsField = savedInstanceState.getSerializable(cellsFieldKey) as CellsField
+//    }
 
     private fun initFields() {
         fieldView = findViewById(R.id.field_view)
         restartBtn = findViewById(R.id.btn_restart)
         stopBtn = findViewById(R.id.btn_stop)
-    }
 
-    inner class mainThread : Thread() {
-        override fun run() {
-            gameThreadIsWorking = true
-            while (gameThreadIsWorking) {
+        disposable = CompositeDisposable()
+        cellsField = CellsField(size, randomAliveFactor)
 
+        observer = object : Observer<Long> {
+            override fun onComplete() {}
+
+            override fun onSubscribe(d: Disposable) {
+                cellsField = CellsField(size, randomAliveFactor)
+                fieldView.cellsField = cellsField
+                disposable.add(d)
+            }
+
+            override fun onNext(t: Long) {
+                fieldView.cellsField = cellsField
                 cellsField.findAllNeighbors()
                 cellsField.determineDeadOrAlive()
-
-                fieldView.cellsField = cellsField
-                //работает на бэкграунд потоке:)
                 fieldView.invalidate()
-                sleep(250)
             }
+
+            override fun onError(e: Throwable) {}
         }
     }
 }
