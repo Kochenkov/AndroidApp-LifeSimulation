@@ -1,6 +1,8 @@
 package com.vkochenkov.lifesimulation.model
 
-class CellsField constructor(val size: Int) {
+import java.io.Serializable
+
+class CellsField constructor(val size: Int): Serializable {
 
     var randomAliveFactor: Double = 0.5
 
