@@ -1,7 +1,10 @@
 package com.vkochenkov.lifesimulation.presentation.activity
 
 import android.os.Bundle
+import android.util.DisplayMetrics
+import android.view.Gravity
 import android.widget.Button
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.vkochenkov.lifesimulation.R
 import com.vkochenkov.lifesimulation.model.CellsField
@@ -18,11 +21,11 @@ class MainActivity : AppCompatActivity() {
     
     //todo написать презентер
 
+    lateinit var gameBackgroundLayout: LinearLayout
     lateinit var fieldView: FieldView
     lateinit var restartBtn: Button
     lateinit var stopBtn: Button
 
-    lateinit var observer: Observer<Long>
     lateinit var disposable: CompositeDisposable
 
     lateinit var cellsField: CellsField
@@ -36,59 +39,76 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        findViewsById()
+        createFieldView()
         initFields()
         setOnClickListeners()
         startObserve()
+    }
+
+    private fun createFieldView() {
+        val metrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(metrics)
+        val phoneScreenWidth = metrics.widthPixels
+        fieldView = FieldView(this, phoneScreenWidth)
+        val params = LinearLayout.LayoutParams(phoneScreenWidth, phoneScreenWidth)
+        params.gravity = Gravity.CENTER_HORIZONTAL
+        fieldView.layoutParams = params
+        gameBackgroundLayout.addView(fieldView, 0)
+    }
+
+    private fun findViewsById() {
+        gameBackgroundLayout = findViewById(R.id.field_background)
+        restartBtn = findViewById(R.id.btn_restart)
+        stopBtn = findViewById(R.id.btn_stop)
     }
 
     private fun startObserve() {
         val observable = Observable.interval(renderInterval, TimeUnit.MILLISECONDS)
         observable.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(observer)
+            .subscribe(observer(true))
     }
 
     private fun setOnClickListeners() {
+        var count = 1
 
         restartBtn.setOnClickListener {
             disposable.clear()
             val observable = Observable.interval(renderInterval, TimeUnit.MILLISECONDS)
             observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(observer)
+                .subscribe(observer(true))
         }
 
+        //todo костыльная обработка для теста, переписать!
         stopBtn.setOnClickListener {
+            count++
             disposable.clear()
+            if (count%2==0) {
+                stopBtn.text = "start"
+            } else {
+                val observable = Observable.interval(renderInterval, TimeUnit.MILLISECONDS)
+                observable.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(observer(false))
+                stopBtn.text = "stop"
+            }
         }
     }
 
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        super.onSaveInstanceState(outState)
-//        outState.putBoolean(gameThreadIsStoppedKey, gameThreadIsWorking)
-//        outState.putSerializable(cellsFieldKey, cellsField)
-//    }
-//
-//    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-//        super.onRestoreInstanceState(savedInstanceState)
-//        gameThreadIsWorking = savedInstanceState.getBoolean(gameThreadIsStoppedKey)
-//        cellsField = savedInstanceState.getSerializable(cellsFieldKey) as CellsField
-//    }
-
     private fun initFields() {
-        fieldView = findViewById(R.id.field_view)
-        restartBtn = findViewById(R.id.btn_restart)
-        stopBtn = findViewById(R.id.btn_stop)
-
         disposable = CompositeDisposable()
         cellsField = CellsField(size, randomAliveFactor)
+    }
 
-        //todo вынести в ф-цию и передавать в нее параметр генерации нового массива, либо использования старого для продолжения
-        observer = object : Observer<Long> {
+    private fun observer(recreateCellsArray: Boolean) = object : Observer<Long> {
             override fun onComplete() {}
 
             override fun onSubscribe(d: Disposable) {
-                cellsField = CellsField(size, randomAliveFactor)
+                if (recreateCellsArray) {
+                    cellsField = CellsField(size, randomAliveFactor)
+                }
                 fieldView.cellsField = cellsField
                 disposable.add(d)
             }
@@ -102,5 +122,4 @@ class MainActivity : AppCompatActivity() {
 
             override fun onError(e: Throwable) {}
         }
-    }
 }

@@ -11,7 +11,6 @@ import com.vkochenkov.lifesimulation.R
 import com.vkochenkov.lifesimulation.model.Cell
 import com.vkochenkov.lifesimulation.model.CellsField
 
-
 class FieldView : View {
 
     var viewSize: Int = 0
@@ -22,6 +21,10 @@ class FieldView : View {
     val CELLS_COLOR: Int
 
     constructor(ctx: Context) : super(ctx) {}
+
+    constructor(ctx: Context, viewSize: Int) : super(ctx) {
+        this.viewSize = viewSize
+    }
 
     constructor(ctx: Context, attrs: AttributeSet) : super(ctx, attrs) {}
 
@@ -36,9 +39,15 @@ class FieldView : View {
         CELLS_COLOR = typedValue.data
     }
 
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        if (viewSize == 0) {
+            viewSize = this.measuredWidth
+        }
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        viewSize = this.measuredWidth
         drawBackground(canvas)
         if (cellsField != null) {
             drawCells(canvas, cellsField!!.cellsArray)
@@ -47,16 +56,14 @@ class FieldView : View {
 
     private fun drawBackground(canvas: Canvas) {
         val paint = Paint()
-        paint.color =
-            BACKGROUND_COLOR
+        paint.color = BACKGROUND_COLOR
         val rect = Rect(0, 0, viewSize, viewSize)
         canvas.drawRect(rect, paint)
     }
 
     private fun drawCells(canvas: Canvas, cellsArray: Array<Array<Cell?>>) {
         val paint = Paint()
-        paint.color =
-            CELLS_COLOR
+        paint.color = CELLS_COLOR
 
         val cellsAmount = cellsArray[0].size
         val rectSize = viewSize / cellsAmount
