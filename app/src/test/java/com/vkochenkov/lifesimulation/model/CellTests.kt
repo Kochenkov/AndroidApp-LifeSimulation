@@ -15,7 +15,7 @@ class CellTests {
             }
         }
         val cell = cellsField.cellsArray[2][2]
-        cell!!.countNeighbors(cellsField.cellsArray)
+        cell!!.countAliveNeighbors(cellsField.cellsArray)
 
         assertEquals(8, cell.aliveNeighbors)
     }

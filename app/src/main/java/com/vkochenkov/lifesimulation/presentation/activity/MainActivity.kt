@@ -1,7 +1,6 @@
 package com.vkochenkov.lifesimulation.presentation.activity
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.vkochenkov.lifesimulation.R
 import com.vkochenkov.lifesimulation.model.Cell
@@ -41,7 +40,7 @@ class MainActivity : AppCompatActivity() {
                 for (i in 0 until cellsField.size) {
                     for (j in 0 until cellsField.size) {
                         val cell: Cell = cellsField.cellsArray[i][j]!!
-                        cell.countNeighbors(cellsField.cellsArray)
+                        cell.countAliveNeighbors(cellsField.cellsArray)
                     }
                 }
 

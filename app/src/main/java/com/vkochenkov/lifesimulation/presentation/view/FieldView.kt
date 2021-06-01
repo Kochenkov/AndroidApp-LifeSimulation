@@ -2,11 +2,12 @@ package com.vkochenkov.lifesimulation.presentation.view
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.View
+import com.vkochenkov.lifesimulation.R
 import com.vkochenkov.lifesimulation.model.Cell
 
 
@@ -16,16 +17,22 @@ class FieldView : View {
 
     var toDrawArray: Array<Array<Cell?>>? = null
 
-    constructor(ctx: Context) : super(ctx) {
-    }
+    val BACKGROUND_COLOR: Int
+    val CELLS_COLOR: Int
 
-    constructor(ctx: Context, attrs: AttributeSet) : super(ctx, attrs) {
-    }
+    constructor(ctx: Context) : super(ctx) {}
 
-    companion object {
-        //todo заменить на ресурсы
-        val BACKGROUND_COLOR = Color.BLUE
-        val CELLS_COLOR = Color.RED
+    constructor(ctx: Context, attrs: AttributeSet) : super(ctx, attrs) {}
+
+    init {
+        val typedValue = TypedValue()
+        val theme = context.theme
+
+        theme.resolveAttribute(R.attr.colorPrimary, typedValue, true)
+        BACKGROUND_COLOR = typedValue.data
+
+        theme.resolveAttribute(R.attr.colorAccent, typedValue, true)
+        CELLS_COLOR = typedValue.data
     }
 
     override fun onDraw(canvas: Canvas) {

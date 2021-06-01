@@ -5,7 +5,7 @@ class Cell(val xPosition: Int, val yPosition: Int) {
     var isAlive = false
     var aliveNeighbors = 0
 
-    fun countNeighbors(
+    fun countAliveNeighbors(
         array: Array<Array<Cell?>>
     ) {
         var count = 0
