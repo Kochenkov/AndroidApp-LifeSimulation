@@ -7,33 +7,17 @@ import android.widget.Button
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.vkochenkov.lifesimulation.R
-import com.vkochenkov.lifesimulation.model.CellsField
 import com.vkochenkov.lifesimulation.presentation.view.FieldView
-import io.reactivex.Observable
-import io.reactivex.Observer
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
-import java.util.concurrent.TimeUnit
+import com.vkochenkov.lifesimulation.presentation.presenter.MainPresenter
 
 class MainActivity : AppCompatActivity() {
-    
-    //todo написать презентер
+
+    private val presenter = MainPresenter
 
     lateinit var gameBackgroundLayout: LinearLayout
     lateinit var fieldView: FieldView
     lateinit var restartBtn: Button
     lateinit var stopBtn: Button
-
-    lateinit var disposable: CompositeDisposable
-
-    lateinit var cellsField: CellsField
-
-    //todo вынести
-    val size = 51
-    val randomAliveFactor = 0.5
-    val renderInterval = 250L
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,9 +25,19 @@ class MainActivity : AppCompatActivity() {
 
         findViewsById()
         createFieldView()
-        initFields()
         setOnClickListeners()
-        startObserve()
+
+        presenter.onCreate(this)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter.onStart(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        presenter.onStop()
     }
 
     private fun createFieldView() {
@@ -63,63 +57,15 @@ class MainActivity : AppCompatActivity() {
         stopBtn = findViewById(R.id.btn_stop)
     }
 
-    private fun startObserve() {
-        val observable = Observable.interval(renderInterval, TimeUnit.MILLISECONDS)
-        observable.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(observer(true))
-    }
-
     private fun setOnClickListeners() {
-        var count = 1
-
         restartBtn.setOnClickListener {
-            disposable.clear()
-            val observable = Observable.interval(renderInterval, TimeUnit.MILLISECONDS)
-            observable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(observer(true))
+            presenter.restart()
         }
 
-        //todo костыльная обработка для теста, переписать!
         stopBtn.setOnClickListener {
-            count++
-            disposable.clear()
-            if (count%2==0) {
-                stopBtn.text = "start"
-            } else {
-                val observable = Observable.interval(renderInterval, TimeUnit.MILLISECONDS)
-                observable.subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(observer(false))
-                stopBtn.text = "stop"
-            }
+            presenter.stop()
         }
     }
 
-    private fun initFields() {
-        disposable = CompositeDisposable()
-        cellsField = CellsField(size, randomAliveFactor)
-    }
 
-    private fun observer(recreateCellsArray: Boolean) = object : Observer<Long> {
-            override fun onComplete() {}
-
-            override fun onSubscribe(d: Disposable) {
-                if (recreateCellsArray) {
-                    cellsField = CellsField(size, randomAliveFactor)
-                }
-                fieldView.cellsField = cellsField
-                disposable.add(d)
-            }
-
-            override fun onNext(t: Long) {
-                fieldView.cellsField = cellsField
-                cellsField.findAllNeighbors()
-                cellsField.determineDeadOrAlive()
-                fieldView.invalidate()
-            }
-
-            override fun onError(e: Throwable) {}
-        }
 }
