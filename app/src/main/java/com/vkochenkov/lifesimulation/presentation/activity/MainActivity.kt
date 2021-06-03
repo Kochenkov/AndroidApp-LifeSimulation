@@ -6,18 +6,23 @@ import android.view.Gravity
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.vkochenkov.lifesimulation.R
 import com.vkochenkov.lifesimulation.presentation.view.FieldView
-import com.vkochenkov.lifesimulation.presentation.presenter.MainPresenter
+import com.vkochenkov.lifesimulation.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
 
-    private val presenter = MainPresenter
+    private val mainViewModel by lazy {
+        ViewModelProvider(this).get(MainViewModel::class.java)
+    }
 
-    lateinit var gameBackgroundLayout: LinearLayout
-    lateinit var fieldView: FieldView
-    lateinit var restartBtn: Button
-    lateinit var stopBtn: Button
+    private lateinit var gameBackgroundLayout: LinearLayout
+    private lateinit var fieldView: FieldView
+    private lateinit var restartBtn: Button
+    private lateinit var startSwitch: SwitchCompat
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,18 +31,19 @@ class MainActivity : AppCompatActivity() {
         findViewsById()
         createFieldView()
         setOnClickListeners()
+        observeViewModelEvents()
 
-        presenter.onCreate(this)
+        mainViewModel.onCreate()
     }
 
     override fun onStart() {
         super.onStart()
-        presenter.onStart(this)
+        mainViewModel.onStart()
     }
 
     override fun onStop() {
         super.onStop()
-        presenter.onStop()
+        mainViewModel.onStop()
     }
 
     private fun createFieldView() {
@@ -54,18 +60,32 @@ class MainActivity : AppCompatActivity() {
     private fun findViewsById() {
         gameBackgroundLayout = findViewById(R.id.field_background)
         restartBtn = findViewById(R.id.btn_restart)
-        stopBtn = findViewById(R.id.btn_stop)
+        startSwitch = findViewById(R.id.switch_start)
     }
 
     private fun setOnClickListeners() {
         restartBtn.setOnClickListener {
-            presenter.restart()
+            mainViewModel.onRestartFromBtn()
         }
 
-        stopBtn.setOnClickListener {
-            presenter.stop()
+        startSwitch.setOnClickListener {
+            mainViewModel.onStartStopSwitch(startSwitch.isChecked)
         }
     }
 
+    private fun observeViewModelEvents() {
 
+        mainViewModel.cellsFieldLiveData.observe(this, Observer {
+            it?.let {
+                fieldView.cellsField = it
+                fieldView.invalidate()
+            }
+        })
+
+        mainViewModel.isWorkingLiveData.observe(this, Observer {
+            it?.let {
+                startSwitch.isChecked = it
+            }
+        })
+    }
 }
