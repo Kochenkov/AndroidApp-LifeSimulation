@@ -20,13 +20,11 @@ class MainViewModel : ViewModel() {
 
     private var mutableCellsFieldLiveData = MutableLiveData<CellsField>()
     private var mutableIsWorkingLiveData = MutableLiveData<Boolean>()
+    private var mutableGenerationsLiveData = MutableLiveData<Long>()
 
     val cellsFieldLiveData: LiveData<CellsField> = mutableCellsFieldLiveData
     val isWorkingLiveData: LiveData<Boolean> = mutableIsWorkingLiveData
-
-    fun onCreate() {
-        startObserveField(true)
-    }
+    val generationLiveData: LiveData<Long> = mutableGenerationsLiveData
 
     fun onStart() {
         startObserveField(false)
@@ -53,7 +51,7 @@ class MainViewModel : ViewModel() {
     }
 
     private fun startObserveField(recreateCellsArray: Boolean) {
-        val fieldObservable = Observable.interval(dataStore.renderInterval, TimeUnit.MILLISECONDS)
+        val fieldObservable = Observable.interval(dataStore.renderingSpeed, TimeUnit.MILLISECONDS)
         fieldObservable.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(fieldObserver(recreateCellsArray))
@@ -64,8 +62,8 @@ class MainViewModel : ViewModel() {
         override fun onComplete() {}
 
         override fun onSubscribe(d: Disposable) {
-            if (recreateCellsArray) {
-                dataStore.cellsField = CellsField(dataStore.size, dataStore.randomAliveFactor)
+            if (recreateCellsArray || dataStore.cellsField == null) {
+                dataStore.cellsField = CellsField(dataStore.cellsAmountPerWidth, dataStore.randomAliveFactor)
             }
             disposable.add(d)
             mutableIsWorkingLiveData.postValue(true)
@@ -75,6 +73,7 @@ class MainViewModel : ViewModel() {
             dataStore.cellsField?.findAllNeighbors()
             dataStore.cellsField?.determineDeadOrAlive()
             mutableCellsFieldLiveData.postValue(dataStore.cellsField)
+            mutableGenerationsLiveData.postValue(dataStore.cellsField?.generationCount)
         }
 
         override fun onError(e: Throwable) {}

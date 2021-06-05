@@ -1,10 +1,14 @@
 package com.vkochenkov.lifesimulation.presentation.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.lifecycle.Observer
@@ -23,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var fieldView: FieldView
     private lateinit var restartBtn: Button
     private lateinit var startSwitch: SwitchCompat
+    private lateinit var generationsTv: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,8 +37,6 @@ class MainActivity : AppCompatActivity() {
         createFieldView()
         setOnClickListeners()
         observeViewModelEvents()
-
-        mainViewModel.onCreate()
     }
 
     override fun onStart() {
@@ -44,6 +47,19 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         mainViewModel.onStop()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_item_exit -> onBackPressed()
+            R.id.menu_item_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun createFieldView() {
@@ -61,6 +77,7 @@ class MainActivity : AppCompatActivity() {
         gameBackgroundLayout = findViewById(R.id.field_background)
         restartBtn = findViewById(R.id.btn_restart)
         startSwitch = findViewById(R.id.switch_start)
+        generationsTv = findViewById(R.id.tv_dinamic_generation)
     }
 
     private fun setOnClickListeners() {
@@ -85,6 +102,12 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.isWorkingLiveData.observe(this, Observer {
             it?.let {
                 startSwitch.isChecked = it
+            }
+        })
+
+        mainViewModel.generationLiveData.observe(this, Observer {
+            it?.let {
+                generationsTv.text = it.toString()
             }
         })
     }

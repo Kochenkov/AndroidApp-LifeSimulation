@@ -4,7 +4,10 @@ import java.io.Serializable
 
 class CellsField constructor(val size: Int): Serializable {
 
-    var randomAliveFactor: Double = 0.5
+    //убрать?
+    private var randomAliveFactor: Double = 0.5
+
+    var generationCount: Long = 0L
 
     val cellsArray: Array<Array<Cell?>> = Array(size) { arrayOfNulls<Cell>(size) }
 
@@ -60,6 +63,7 @@ class CellsField constructor(val size: Int): Serializable {
 
     //выставление флага, на основании количества живых соседей для всех клеток
     fun determineDeadOrAlive() {
+        generationCount++
         for (array in cellsArray) {
             for (element in array) {
                 val cell: Cell = element!!
