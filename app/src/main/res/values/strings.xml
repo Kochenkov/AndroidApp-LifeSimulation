@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">LifeSimulation</string>
+    <string name="string_speed_with_dimens">Speed, gen/sec</string>
+    <string name="string_save_and_restart">Save and Restart</string>
+    <string name="string_current_generation">Current generation:</string>
+    <string name="string_restart">Restart</string>
+    <string name="string_starting">Starting</string>
+    <string name="string_settings">Settings</string>
+    <string name="string_exit">Exit</string>
 </resources>

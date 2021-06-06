@@ -6,10 +6,10 @@
     <item
         android:id="@+id/menu_item_settings"
         android:orderInCategory="1"
-        android:title="Settings" />
+        android:title="@string/string_settings" />
 
     <item
         android:id="@+id/menu_item_exit"
         android:orderInCategory="2"
-        android:title="Exit" />
+        android:title="@string/string_exit" />
 </menu>

@@ -5,9 +5,9 @@ object DataStore {
     //default values
     var cellsAmountPerWidth = 51
     var randomAliveFactor = 0.5
-    val minRenderingSpeed = 1000L //toShown = 1000/1000 = 1 g/s
+    val minRenderingSpeed: Double = 1000.0
 
-    var renderingSpeed = minRenderingSpeed
+    var renderingSpeed: Double = minRenderingSpeed
 
     var cellsField: CellsField? = null
 }

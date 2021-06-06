@@ -30,7 +30,7 @@ class MainViewModel : ViewModel() {
         startObserveField(false)
     }
 
-    fun onStop() {
+    fun onPose() {
         disposable.clear()
         mutableIsWorkingLiveData.postValue(false)
     }
@@ -51,7 +51,7 @@ class MainViewModel : ViewModel() {
     }
 
     private fun startObserveField(recreateCellsArray: Boolean) {
-        val fieldObservable = Observable.interval(dataStore.renderingSpeed, TimeUnit.MILLISECONDS)
+        val fieldObservable = Observable.interval(dataStore.renderingSpeed.toLong(), TimeUnit.MILLISECONDS)
         fieldObservable.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(fieldObserver(recreateCellsArray))

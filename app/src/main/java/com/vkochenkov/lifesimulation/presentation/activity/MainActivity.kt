@@ -3,6 +3,7 @@ package com.vkochenkov.lifesimulation.presentation.activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
@@ -44,9 +45,9 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.onStart()
     }
 
-    override fun onStop() {
-        super.onStop()
-        mainViewModel.onStop()
+    override fun onPause() {
+        super.onPause()
+        mainViewModel.onPose()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -91,7 +92,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeViewModelEvents() {
-
         mainViewModel.cellsFieldLiveData.observe(this, Observer {
             it?.let {
                 fieldView.cellsField = it
