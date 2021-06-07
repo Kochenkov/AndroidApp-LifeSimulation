@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LIfeSimulation">
-        <activity android:name=".presentation.activity.SettingsActivity"></activity>
+        <activity android:name=".presentation.activity.AboutActivity"/>
+        <activity android:name=".presentation.activity.SettingsActivity" />
         <activity android:name=".presentation.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

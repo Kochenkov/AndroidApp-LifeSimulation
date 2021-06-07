@@ -62,6 +62,7 @@ class MainActivity : AppCompatActivity() {
                 finish()
                 exitProcess(0);}
             R.id.menu_item_settings -> startActivity(Intent(this, SettingsActivity::class.java))
+            R.id.menu_item_about -> startActivity(Intent(this, AboutActivity::class.java))
         }
         return super.onOptionsItemSelected(item)
     }
