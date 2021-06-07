@@ -3,11 +3,13 @@ package com.vkochenkov.lifesimulation.model
 object DataStore {
 
     //default values
-    var cellsAmountPerWidth = 51
-    var randomAliveFactor = 0.5
-    val minRenderingSpeed: Double = 1000.0
+    val baseCellsAmountPerWidth: Int = 50
+    val baseRenderingSpeed: Double = 250.0
 
-    var renderingSpeed: Double = minRenderingSpeed
+    var randomAliveFactor = 0.5
+
+    var sizeCellsPerWidth: Int = baseCellsAmountPerWidth
+    var renderingSpeed: Double = baseRenderingSpeed
 
     var cellsField: CellsField? = null
 }

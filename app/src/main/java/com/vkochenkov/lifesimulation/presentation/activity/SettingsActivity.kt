@@ -14,6 +14,7 @@ import com.vkochenkov.lifesimulation.viewmodel.SettingsViewModel
 class SettingsActivity : AppCompatActivity() {
 
     lateinit var speedEdt: EditText
+    lateinit var sizeEdt: EditText
     lateinit var saveBtn: Button
 
     private val settingsViewModel by lazy {
@@ -42,6 +43,7 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun findViewsById() {
         speedEdt = findViewById(R.id.settings_edt_speed)
+        sizeEdt = findViewById(R.id.settings_edt_size)
         saveBtn = findViewById(R.id.settings_btn_save)
     }
 
@@ -51,6 +53,9 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         speedEdt.addTextChangedListener(object : TextWatcher {
+
+            //todo нужно ограничить сумму скорости и размера до 250, иначе сильно лагает
+            // минимум размер - 10, минимум скорость - 1
             override fun afterTextChanged(editable: Editable) {
                 if (editable.startsWith("0")) {
                     speedEdt.setText("")
@@ -70,6 +75,12 @@ class SettingsActivity : AppCompatActivity() {
         settingsViewModel.speedLiveData.observe(this, Observer {
             it?.let {
                 speedEdt.setText(it.toString())
+            }
+        })
+
+        settingsViewModel.sizeLiveData.observe(this, Observer {
+            it?.let {
+                sizeEdt.setText(it.toString())
             }
         })
     }
