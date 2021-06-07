@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Life simulation</string>
+    <string name="app_name">Game of Life</string>
     <string name="string_speed_with_dimens">Speed, gen/sec:</string>
     <string name="string_save_and_restart">Save and Restart</string>
     <string name="string_current_generation">Current generation: &#160;</string>
@@ -9,6 +9,6 @@
     <string name="string_exit">Exit</string>
     <string name="string_settings_size">Size, сells/screen:</string>
     <string name="string_about">About</string>
-    <string name="string_about_app">Life simulation is a game built on the model of cellular automaton. The essence of the model is as follows: there is a field with cells. The cell can be alive or dead. A cell comes to life if it has 3 living neighbors. A cell can die if the number of neighbors becomes less than 2 or more than 3.\nIn the current version of the app, a field with cells is created filled in randomly. In the future, the function of drawing on the field will be added, which will allow you to create any initial configuration of living cells.</string>
+    <string name="string_about_app">The Game of Life is a cellular automaton, invented by the English mathematician John Conway in 1970.\nWorking rules: there is a field with cells. The cell can be alive or dead. A cell comes to life if it has 3 living neighbors. A cell can die if the number of neighbors becomes less than 2 or more than 3.\nIn the current version of the app, a field with cells is created filled in randomly. In the future, the function of drawing on the field will be added, which will allow you to create any initial configuration of living cells.</string>
     <string name="string_author">\u00A9 Created by Kochenkov</string>
 </resources>
