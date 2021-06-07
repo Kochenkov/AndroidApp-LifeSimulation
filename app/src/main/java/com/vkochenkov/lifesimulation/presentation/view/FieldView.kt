@@ -5,6 +5,7 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import com.vkochenkov.lifesimulation.R
@@ -67,9 +68,21 @@ class FieldView : View {
 
         val cellsAmount = cellsArray[0].size
         val rectSize = viewSize / cellsAmount
+        Log.d("test!!!", "viewSize " + viewSize.toString())
+        Log.d("test!!!", "cells amount " + cellsAmount.toString())
+        Log.d("test!!!", "rect size " + rectSize.toString())
 
-        var line = 0
-        var column = 0
+
+        val difSize = viewSize - rectSize*cellsAmount + 1
+
+        Log.d("test!!!", "diff size " + difSize.toString())
+
+
+        //todo нужно, что бы клетки всегда отрисовывались по середине экрана
+        var line = difSize/2
+        var column = difSize/2
+        Log.d("test!!!", "column " + column.toString())
+
 
         for (array in cellsArray) {
             for (elem in array) {
@@ -80,7 +93,7 @@ class FieldView : View {
                 }
             }
             line += rectSize
-            column = 0
+            column = difSize/2
         }
     }
 }

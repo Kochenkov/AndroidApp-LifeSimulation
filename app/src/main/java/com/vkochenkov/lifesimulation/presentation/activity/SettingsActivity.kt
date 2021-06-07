@@ -3,6 +3,7 @@ package com.vkochenkov.lifesimulation.presentation.activity
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
@@ -52,23 +53,8 @@ class SettingsActivity : AppCompatActivity() {
             settingsViewModel.onSaveBtnClicked(this)
         }
 
-        speedEdt.addTextChangedListener(object : TextWatcher {
-
-            //todo нужно ограничить сумму скорости и размера до 250, иначе сильно лагает
-            // минимум размер - 10, минимум скорость - 1
-            override fun afterTextChanged(editable: Editable) {
-                if (editable.startsWith("0")) {
-                    speedEdt.setText("")
-                }
-                if (editable.toString() != "" && editable.toString().toDouble() > 999) {
-                    speedEdt.setText("999")
-                }
-            }
-
-            override fun beforeTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(charSequence: CharSequence, start: Int, before: Int, count: Int) {}
-        })
+        speedEdt.addTextChangedListener(settingsViewModel.onSpeedChanged(speedEdt))
+        sizeEdt.addTextChangedListener(settingsViewModel.onSizeChanged(sizeEdt))
     }
 
     private fun observeViewModelEvents() {
