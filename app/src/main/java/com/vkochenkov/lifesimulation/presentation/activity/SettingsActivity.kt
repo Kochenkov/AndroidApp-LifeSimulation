@@ -14,9 +14,9 @@ import com.vkochenkov.lifesimulation.viewmodel.SettingsViewModel
 
 class SettingsActivity : AppCompatActivity() {
 
-    lateinit var speedEdt: EditText
-    lateinit var sizeEdt: EditText
-    lateinit var saveBtn: Button
+    private lateinit var speedEdt: EditText
+    private lateinit var sizeEdt: EditText
+    private lateinit var saveBtn: Button
 
     private val settingsViewModel by lazy {
         ViewModelProvider(this).get(SettingsViewModel::class.java)
@@ -50,7 +50,8 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun setOnClickListeners() {
         saveBtn.setOnClickListener {
-            settingsViewModel.onSaveBtnClicked(this)
+            settingsViewModel.onSaveBtnClicked(speedEdt.text.toString(), sizeEdt.text.toString())
+            onBackPressed()
         }
 
         speedEdt.addTextChangedListener(settingsViewModel.onSpeedChanged(speedEdt))

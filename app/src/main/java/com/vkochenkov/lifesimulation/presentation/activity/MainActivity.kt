@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.vkochenkov.lifesimulation.R
 import com.vkochenkov.lifesimulation.presentation.view.FieldView
 import com.vkochenkov.lifesimulation.viewmodel.MainViewModel
+import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
 
@@ -57,7 +58,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menu_item_exit -> onBackPressed()
+            R.id.menu_item_exit -> {
+                finish()
+                exitProcess(0);}
             R.id.menu_item_settings -> startActivity(Intent(this, SettingsActivity::class.java))
         }
         return super.onOptionsItemSelected(item)

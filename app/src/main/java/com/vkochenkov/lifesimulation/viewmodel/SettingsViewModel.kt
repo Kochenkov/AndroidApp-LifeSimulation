@@ -26,17 +26,15 @@ class SettingsViewModel : ViewModel() {
 
     fun onStop() {}
 
-    fun onSaveBtnClicked(activity: SettingsActivity) {
-        dataStore.renderingSpeed = 1000.0/activity.speedEdt.text.toString().toDouble()
+    fun onSaveBtnClicked(speed: String, size: String) {
+        dataStore.renderingSpeed = 1000.0/speed.toDouble()
         dataStore.speedToShow = 1000.0/dataStore.renderingSpeed
-        dataStore.sizeCellsPerWidth = activity.sizeEdt.text.toString().toInt()
+        dataStore.sizeCellsPerWidth = size.toInt()
 
         mutableSpeedLiveData.postValue(dataStore.speedToShow)
         mutableSizeLiveData.postValue(dataStore.sizeCellsPerWidth)
 
         dataStore.cellsField = CellsField(dataStore.sizeCellsPerWidth, dataStore.randomAliveFactor)
-
-        activity.onBackPressed()
     }
 
     fun onSpeedChanged(edt: EditText): TextWatcher {
