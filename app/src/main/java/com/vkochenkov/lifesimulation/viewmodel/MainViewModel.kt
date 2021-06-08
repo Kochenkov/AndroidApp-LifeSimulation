@@ -18,13 +18,13 @@ class MainViewModel : ViewModel() {
     var dataStore = DataStore
     var disposable = CompositeDisposable()
 
-    private var mutableCellsFieldLiveData = MutableLiveData<CellsField>()
-    private var mutableIsWorkingLiveData = MutableLiveData<Boolean>()
-    private var mutableGenerationsLiveData = MutableLiveData<Long>()
+    private var cellsFieldMutableLiveData = MutableLiveData<CellsField>()
+    private var isWorkingMutableLiveData = MutableLiveData<Boolean>()
+    private var generationsMutableLiveData = MutableLiveData<Long>()
 
-    val cellsFieldLiveData: LiveData<CellsField> = mutableCellsFieldLiveData
-    val isWorkingLiveData: LiveData<Boolean> = mutableIsWorkingLiveData
-    val generationLiveData: LiveData<Long> = mutableGenerationsLiveData
+    val cellsFieldLiveData: LiveData<CellsField> = cellsFieldMutableLiveData
+    val isWorkingLiveData: LiveData<Boolean> = isWorkingMutableLiveData
+    val generationLiveData: LiveData<Long> = generationsMutableLiveData
 
     fun onStart() {
         startObserveField(false)
@@ -32,19 +32,19 @@ class MainViewModel : ViewModel() {
 
     fun onPose() {
         disposable.clear()
-        mutableIsWorkingLiveData.postValue(false)
+        isWorkingMutableLiveData.postValue(false)
     }
 
     fun onRestartFromBtn() {
         disposable.clear()
-        mutableIsWorkingLiveData.postValue(false)
+        isWorkingMutableLiveData.postValue(false)
         startObserveField(true)
     }
 
     fun onStartStopSwitch(isChecked: Boolean) {
         if (!isChecked) {
             disposable.clear()
-            mutableIsWorkingLiveData.postValue(false)
+            isWorkingMutableLiveData.postValue(false)
         } else {
             startObserveField(false)
         }
@@ -66,14 +66,14 @@ class MainViewModel : ViewModel() {
                 dataStore.cellsField = CellsField(dataStore.sizeCellsPerWidth, dataStore.randomAliveFactor)
             }
             disposable.add(d)
-            mutableIsWorkingLiveData.postValue(true)
+            isWorkingMutableLiveData.postValue(true)
         }
 
         override fun onNext(t: Long) {
             dataStore.cellsField?.findAllNeighbors()
             dataStore.cellsField?.determineDeadOrAlive()
-            mutableCellsFieldLiveData.postValue(dataStore.cellsField)
-            mutableGenerationsLiveData.postValue(dataStore.cellsField?.generationCount)
+            cellsFieldMutableLiveData.postValue(dataStore.cellsField)
+            generationsMutableLiveData.postValue(dataStore.cellsField?.generationCount)
         }
 
         override fun onError(e: Throwable) {}
