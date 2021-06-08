@@ -10,8 +10,8 @@ object DataStore {
     val baseCellsAmountPerWidth: Int = 50
     /** milliseconds */
     val baseRenderingSpeed: Double = 250.0
-
-    var randomAliveFactor = 0.5 //%
+    /**percents*/
+    var randomAliveFactor = 0.5
 
     var sizeCellsPerWidth: Int = baseCellsAmountPerWidth
     var renderingSpeed: Double = baseRenderingSpeed

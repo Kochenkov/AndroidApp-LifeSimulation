@@ -23,6 +23,6 @@ class Cell(val xPosition: Int, val yPosition: Int) {
                 }
             }
         }
-        aliveNeighbors = count;
+        aliveNeighbors = count
     }
 }
