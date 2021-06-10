@@ -2,17 +2,17 @@ package com.vkochenkov.lifesimulation.model
 
 import java.io.Serializable
 
-class CellsField constructor(var size: Int) : Serializable {
+class CellsField constructor(val size: Int, private val randomAliveFactor: Double) : Serializable {
 
     var generationCount: Long = 0L
 
-    val cellsArray: Array<Array<Cell?>> = Array(size) { arrayOfNulls<Cell>(size) }
+    var cellsArray: Array<Array<Cell?>> = Array(size) { arrayOfNulls<Cell>(size) }
 
     init {
         for (i in 0 until size) {
             for (j in 0 until size) {
                 val cell = Cell(i, j)
-                cell.isAlive = Math.random() < DataStore.randomAliveFactor
+                cell.isAlive = Math.random() < randomAliveFactor
                 cellsArray[i][j] = cell
             }
         }

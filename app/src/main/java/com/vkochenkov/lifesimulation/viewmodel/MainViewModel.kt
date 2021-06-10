@@ -41,6 +41,14 @@ class MainViewModel : ViewModel() {
         startObserveField(true)
     }
 
+    fun onClearFromBtn() {
+        disposable.clear()
+        isWorkingMutableLiveData.postValue(false)
+        dataStore.cellsField = CellsField(dataStore.sizeCellsPerWidth, 0.0)
+        cellsFieldMutableLiveData.postValue(dataStore.cellsField)
+        generationsMutableLiveData.postValue(dataStore.cellsField?.generationCount)
+    }
+
     fun onStartStopSwitch(isChecked: Boolean) {
         if (!isChecked) {
             disposable.clear()
@@ -63,7 +71,7 @@ class MainViewModel : ViewModel() {
 
         override fun onSubscribe(d: Disposable) {
             if (recreateCellsArray || dataStore.cellsField == null) {
-                dataStore.cellsField = CellsField(dataStore.sizeCellsPerWidth)
+                dataStore.cellsField = CellsField(dataStore.sizeCellsPerWidth, dataStore.randomAliveFactor)
             }
             disposable.add(d)
             isWorkingMutableLiveData.postValue(true)
