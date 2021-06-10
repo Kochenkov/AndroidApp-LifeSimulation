@@ -63,7 +63,7 @@ class MainViewModel : ViewModel() {
 
         override fun onSubscribe(d: Disposable) {
             if (recreateCellsArray || dataStore.cellsField == null) {
-                dataStore.cellsField = CellsField(dataStore.sizeCellsPerWidth, dataStore.randomAliveFactor)
+                dataStore.cellsField = CellsField(dataStore.sizeCellsPerWidth)
             }
             disposable.add(d)
             isWorkingMutableLiveData.postValue(true)

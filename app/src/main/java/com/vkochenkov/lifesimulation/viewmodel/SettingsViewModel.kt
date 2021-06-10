@@ -33,7 +33,7 @@ class SettingsViewModel : ViewModel() {
         speedMutableLiveData.postValue(dataStore.speedToShow)
         sizeMutableLiveData.postValue(dataStore.sizeCellsPerWidth)
 
-        dataStore.cellsField = CellsField(dataStore.sizeCellsPerWidth, dataStore.randomAliveFactor)
+        dataStore.cellsField = CellsField(dataStore.sizeCellsPerWidth)
     }
 
     fun onSpeedChanged(edt: EditText): TextWatcher {

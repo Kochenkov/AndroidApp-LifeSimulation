@@ -2,50 +2,18 @@ package com.vkochenkov.lifesimulation.model
 
 import java.io.Serializable
 
-class CellsField constructor(val size: Int): Serializable {
-
-    //убрать?
-    private var randomAliveFactor: Double = 0.5
+class CellsField constructor(var size: Int) : Serializable {
 
     var generationCount: Long = 0L
 
     val cellsArray: Array<Array<Cell?>> = Array(size) { arrayOfNulls<Cell>(size) }
 
-    constructor(size:Int, randomAliveFactor: Double): this(size) {
-        CellsField(size)
-        this.randomAliveFactor = randomAliveFactor
-    }
-
-//    companion object {
-//        fun toBooleanArray(inputArray: Array<Array<Cell?>>): Array<Array<Boolean?>> {
-//            val outputArray = Array(inputArray.size) { arrayOfNulls<Boolean>(inputArray.size)}
-//            for (i in inputArray.indices) {
-//                for (j in inputArray.indices) {
-//                    outputArray[i][j] = inputArray[i][j]?.isAlive
-//                }
-//            }
-//            return outputArray
-//        }
-//
-//        fun toCellArray(inputArray: Array<Array<Boolean?>>): Array<Array<Cell?>> {
-//            val outputArray = Array(inputArray.size) { arrayOfNulls<Cell>(inputArray.size)}
-//            for (i in inputArray.indices) {
-//                for (j in inputArray.indices) {
-//                    val cell = Cell(i, j)
-//                    if (inputArray[i][j]!!) {
-//                        cell.isAlive = true
-//                    }
-//                }
-//            }
-//            return outputArray
-//        }
-//    }
-
     init {
         for (i in 0 until size) {
             for (j in 0 until size) {
-                val cell = Cell(i, j)
-                cell.isAlive = Math.random() < randomAliveFactor
+                //j->x, i->y
+                val cell = Cell(j, i)
+                cell.isAlive = Math.random() < DataStore.randomAliveFactor
                 cellsArray[i][j] = cell
             }
         }
