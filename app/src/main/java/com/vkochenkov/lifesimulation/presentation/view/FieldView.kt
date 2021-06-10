@@ -5,11 +5,10 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
-import android.util.Log
 import android.util.TypedValue
+import android.view.MotionEvent
 import android.view.View
 import com.vkochenkov.lifesimulation.R
-import com.vkochenkov.lifesimulation.model.Cell
 import com.vkochenkov.lifesimulation.model.CellsField
 
 class FieldView : View {
@@ -51,7 +50,29 @@ class FieldView : View {
         super.onDraw(canvas)
         drawBackground(canvas)
         if (cellsField != null) {
-            drawCells(canvas, cellsField!!.cellsArray)
+            drawCells(canvas)
+        }
+    }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+        val x = event!!.x
+        val y = event.y
+        makeCellAlive(x, y)
+        invalidate()
+        return true
+    }
+
+    private fun makeCellAlive(x: Float, y: Float) {
+        val rectSize = viewSize / cellsField!!.size
+        val difSize = (viewSize - rectSize*cellsField!!.size + 1)/2
+
+        loop@ for (array in cellsField!!.cellsArray) {
+            for (elem in array) {
+                if ((elem!!.verticalPosition*rectSize+rectSize+difSize)>=y && (elem.horizontalPosition*rectSize+rectSize+difSize)>=x) {
+                    elem.isAlive = true
+                    break@loop
+                }
+            }
         }
     }
 
@@ -62,29 +83,18 @@ class FieldView : View {
         canvas.drawRect(rect, paint)
     }
 
-    private fun drawCells(canvas: Canvas, cellsArray: Array<Array<Cell?>>) {
+    private fun drawCells(canvas: Canvas) {
         val paint = Paint()
         paint.color = CELLS_COLOR
 
-        val cellsAmount = cellsArray[0].size
+        val cellsAmount = cellsField!!.size
         val rectSize = viewSize / cellsAmount
-        Log.d("test!!!", "viewSize " + viewSize.toString())
-        Log.d("test!!!", "cells amount " + cellsAmount.toString())
-        Log.d("test!!!", "rect size " + rectSize.toString())
-
-
         val difSize = viewSize - rectSize*cellsAmount + 1
 
-        Log.d("test!!!", "diff size " + difSize.toString())
-
-
-        //todo нужно, что бы клетки всегда отрисовывались по середине экрана
         var line = difSize/2
         var column = difSize/2
-        Log.d("test!!!", "column " + column.toString())
 
-
-        for (array in cellsArray) {
+        for (array in cellsField!!.cellsArray) {
             for (elem in array) {
                 val rect = Rect(column, line, rectSize + column, rectSize + line)
                 column += rectSize

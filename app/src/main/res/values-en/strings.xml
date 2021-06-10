@@ -9,6 +9,7 @@
     <string name="string_exit">Exit</string>
     <string name="string_settings_size">Size, сells/screen:</string>
     <string name="string_about">About</string>
-    <string name="string_about_app">The Game of Life is a cellular automaton, invented by the English mathematician John Conway in 1970.\nWorking rules: there is a field with cells. The cell can be alive or dead. A cell comes to life if it has 3 living neighbors. A cell can die if the number of neighbors becomes less than 2 or more than 3.\nIn the current version of the app, a field with cells is created filled in randomly. In the future, the function of drawing on the field will be added, which will allow you to create any initial configuration of living cells.</string>
+    <string name="string_about_app">The Game of Life is a cellular automaton, invented by the English mathematician John Conway in 1970.\nWorking rules: there is a field with cells. The cell can be alive or dead. A cell comes to life if it has 3 living neighbors. A cell can die if the number of neighbors becomes less than 2 or more than 3.\n\nAt the beginning of the game, the field is randomly filled with live cells. At any time, you can add live cells to the field by simply tapping your finger in the any place. Also, the field can be completely cleared by clicking on the button.</string>
     <string name="string_author">\u00A9 Created by Kochenkov</string>
+    <string name="string_clear">Clear</string>
 </resources>

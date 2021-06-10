@@ -19,15 +19,15 @@ class SettingsViewModel : ViewModel() {
     var sizeLiveData: LiveData<Int> = sizeMutableLiveData
 
     fun onStart() {
-        speedMutableLiveData.postValue(1000.0/dataStore.renderingSpeed)
+        speedMutableLiveData.postValue(1000.0 / dataStore.renderingSpeed)
         sizeMutableLiveData.postValue(dataStore.sizeCellsPerWidth)
     }
 
     fun onStop() {}
 
     fun onSaveBtnClicked(speed: String, size: String) {
-        dataStore.renderingSpeed = 1000.0/speed.toDouble()
-        dataStore.speedToShow = 1000.0/dataStore.renderingSpeed
+        dataStore.renderingSpeed = 1000.0 / speed.toDouble()
+        dataStore.speedToShow = 1000.0 / dataStore.renderingSpeed
         dataStore.sizeCellsPerWidth = size.toInt()
 
         speedMutableLiveData.postValue(dataStore.speedToShow)
@@ -55,8 +55,20 @@ class SettingsViewModel : ViewModel() {
             }
         }
 
-        override fun beforeTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {}
+        override fun beforeTextChanged(
+            charSequence: CharSequence,
+            start: Int,
+            count: Int,
+            after: Int
+        ) {
+        }
 
-        override fun onTextChanged(charSequence: CharSequence, start: Int, before: Int, count: Int) {}
+        override fun onTextChanged(
+            charSequence: CharSequence,
+            start: Int,
+            before: Int,
+            count: Int
+        ) {
+        }
     }
 }

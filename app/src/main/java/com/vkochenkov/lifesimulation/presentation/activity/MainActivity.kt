@@ -3,7 +3,6 @@ package com.vkochenkov.lifesimulation.presentation.activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
 import android.view.Gravity
 import android.view.Menu
 import android.view.MenuItem
@@ -28,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var gameBackgroundLayout: LinearLayout
     private lateinit var fieldView: FieldView
     private lateinit var restartBtn: Button
+    private lateinit var clearBtn: Button
     private lateinit var startSwitch: SwitchCompat
     private lateinit var generationsTv: TextView
 
@@ -60,7 +60,8 @@ class MainActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.menu_item_exit -> {
                 finish()
-                exitProcess(0);}
+                exitProcess(0)
+            }
             R.id.menu_item_settings -> startActivity(Intent(this, SettingsActivity::class.java))
             R.id.menu_item_about -> startActivity(Intent(this, AboutActivity::class.java))
         }
@@ -81,6 +82,7 @@ class MainActivity : AppCompatActivity() {
     private fun findViewsById() {
         gameBackgroundLayout = findViewById(R.id.field_background)
         restartBtn = findViewById(R.id.btn_restart)
+        clearBtn = findViewById(R.id.btn_clear)
         startSwitch = findViewById(R.id.switch_start)
         generationsTv = findViewById(R.id.tv_dinamic_generation)
     }
@@ -88,6 +90,10 @@ class MainActivity : AppCompatActivity() {
     private fun setOnClickListeners() {
         restartBtn.setOnClickListener {
             mainViewModel.onRestartFromBtn()
+        }
+
+        clearBtn.setOnClickListener {
+            mainViewModel.onClearFromBtn()
         }
 
         startSwitch.setOnClickListener {

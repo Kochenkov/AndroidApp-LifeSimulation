@@ -41,6 +41,14 @@ class MainViewModel : ViewModel() {
         startObserveField(true)
     }
 
+    fun onClearFromBtn() {
+        disposable.clear()
+        isWorkingMutableLiveData.postValue(false)
+        dataStore.cellsField = CellsField(dataStore.sizeCellsPerWidth, 0.0)
+        cellsFieldMutableLiveData.postValue(dataStore.cellsField)
+        generationsMutableLiveData.postValue(dataStore.cellsField?.generationCount)
+    }
+
     fun onStartStopSwitch(isChecked: Boolean) {
         if (!isChecked) {
             disposable.clear()
