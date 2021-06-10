@@ -64,9 +64,11 @@ class FieldView : View {
 
     private fun makeCellAlive(x: Float, y: Float) {
         val rectSize = viewSize / cellsField!!.size
+        val difSize = (viewSize - rectSize*cellsField!!.size + 1)/2
+
         loop@ for (array in cellsField!!.cellsArray) {
             for (elem in array) {
-                if ((elem!!.verticalPosition*rectSize+rectSize)>=y && (elem.horizontalPosition*rectSize+rectSize)>=x) {
+                if ((elem!!.verticalPosition*rectSize+rectSize+difSize)>=y && (elem.horizontalPosition*rectSize+rectSize+difSize)>=x) {
                     elem.isAlive = true
                     break@loop
                 }
@@ -87,7 +89,6 @@ class FieldView : View {
 
         val cellsAmount = cellsField!!.size
         val rectSize = viewSize / cellsAmount
-
         val difSize = viewSize - rectSize*cellsAmount + 1
 
         var line = difSize/2
