@@ -66,7 +66,7 @@ class FieldView : View {
         val rectSize = viewSize / cellsField!!.size
         loop@ for (array in cellsField!!.cellsArray) {
             for (elem in array) {
-                if ((elem!!.xPosition*rectSize+rectSize)>=x && (elem.yPosition*rectSize+rectSize)>=y) {
+                if ((elem!!.verticalPosition*rectSize+rectSize)>=y && (elem.horizontalPosition*rectSize+rectSize)>=x) {
                     elem.isAlive = true
                     break@loop
                 }

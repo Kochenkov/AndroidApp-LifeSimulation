@@ -11,8 +11,7 @@ class CellsField constructor(var size: Int) : Serializable {
     init {
         for (i in 0 until size) {
             for (j in 0 until size) {
-                //j->x, i->y
-                val cell = Cell(j, i)
+                val cell = Cell(i, j)
                 cell.isAlive = Math.random() < DataStore.randomAliveFactor
                 cellsArray[i][j] = cell
             }
