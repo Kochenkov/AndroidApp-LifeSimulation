@@ -11,11 +11,11 @@ object DataStore {
     /** milliseconds */
     val baseRenderingSpeed: Double = 250.0
     /**percents*/
-    var randomAliveFactor = 0.5
+    val randomAliveFactor = 0.5
 
     var sizeCellsPerWidth: Int = baseCellsAmountPerWidth
     var renderingSpeed: Double = baseRenderingSpeed
     var speedToShow: Double = 1000/renderingSpeed
-
     var cellsField: CellsField? = null
+    var isWorking = true
 }
