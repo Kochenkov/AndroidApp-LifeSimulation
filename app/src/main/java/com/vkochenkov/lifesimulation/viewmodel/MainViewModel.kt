@@ -27,7 +27,9 @@ class MainViewModel : ViewModel() {
     val generationLiveData: LiveData<Long> = generationsMutableLiveData
 
     fun onStart() {
-        startObserveField(false)
+        if (dataStore.isWorking) {
+            startObserveField(false)
+        }
     }
 
     fun onPose() {
@@ -37,13 +39,15 @@ class MainViewModel : ViewModel() {
 
     fun onRestartFromBtn() {
         disposable.clear()
-        isWorkingMutableLiveData.postValue(false)
+        dataStore.isWorking = false
+        isWorkingMutableLiveData.postValue(dataStore.isWorking)
         startObserveField(true)
     }
 
     fun onClearFromBtn() {
         disposable.clear()
-        isWorkingMutableLiveData.postValue(false)
+        dataStore.isWorking = false
+        isWorkingMutableLiveData.postValue(dataStore.isWorking)
         dataStore.cellsField = CellsField(dataStore.sizeCellsPerWidth, 0.0)
         cellsFieldMutableLiveData.postValue(dataStore.cellsField)
         generationsMutableLiveData.postValue(dataStore.cellsField?.generationCount)
@@ -52,7 +56,8 @@ class MainViewModel : ViewModel() {
     fun onStartStopSwitch(isChecked: Boolean) {
         if (!isChecked) {
             disposable.clear()
-            isWorkingMutableLiveData.postValue(false)
+            dataStore.isWorking = false
+            isWorkingMutableLiveData.postValue(dataStore.isWorking)
         } else {
             startObserveField(false)
         }
@@ -74,7 +79,8 @@ class MainViewModel : ViewModel() {
                 dataStore.cellsField = CellsField(dataStore.sizeCellsPerWidth, dataStore.randomAliveFactor)
             }
             disposable.add(d)
-            isWorkingMutableLiveData.postValue(true)
+            dataStore.isWorking = true
+            isWorkingMutableLiveData.postValue(dataStore.isWorking)
         }
 
         override fun onNext(t: Long) {
