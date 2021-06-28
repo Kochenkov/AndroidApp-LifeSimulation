@@ -34,6 +34,7 @@ class SettingsViewModel : ViewModel() {
         sizeMutableLiveData.postValue(dataStore.sizeCellsPerWidth)
 
         dataStore.cellsField = CellsField(dataStore.sizeCellsPerWidth, dataStore.randomAliveFactor)
+        dataStore.isWorking = true
     }
 
     fun onSpeedChanged(edt: EditText): TextWatcher {
